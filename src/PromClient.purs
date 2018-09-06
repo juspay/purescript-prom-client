@@ -11,7 +11,6 @@ import Node.Express.Types (ExpressM, Response, Request)
 foreign import data Metric :: Type
 foreign import data Timer :: Type
 foreign import promClusterMetrics :: forall e. Fn3 Request Response (ExpressM e Unit) (ExpressM e Unit)
-foreign import promMetricsHandler :: forall e. Fn3 Request Response (ExpressM e Unit) (ExpressM e Unit)
 
 foreign import initCounter' :: forall e. Fn3 String String (Array String) (Eff e Metric)
 foreign import incrementCounter' :: forall a e. Fn2 Metric a (Eff e Metric)
