@@ -48,4 +48,6 @@ exports.endTimerImpl = function (histogram, labels, execTimer) {
   };
 };
 
+exports.emptyTimer = function () { return {}; };
+
 exports.promClusterMetrics = promBundle.clusterMetrics();

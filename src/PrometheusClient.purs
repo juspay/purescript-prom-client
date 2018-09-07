@@ -9,8 +9,8 @@ import Node.Express.Types (ExpressM, Response, Request)
 
 foreign import data Metric :: Type
 foreign import data Timer :: Type
+foreign import emptyTimer :: forall e. Eff e Timer
 foreign import promClusterMetrics :: forall e. Fn3 Request Response (ExpressM e Unit) (ExpressM e Unit)
-
 foreign import initCounterImpl :: forall e. Fn3 String String (Array String) (Eff e Metric)
 foreign import initHistogramImpl :: forall e. Fn6 String String (Array String) Number Number Number (Eff e Metric)
 foreign import incrementCounterImpl :: forall a e. Fn2 Metric a (Eff e Metric)
@@ -34,4 +34,3 @@ startTimer histogram labelRec  =
 
 endTimer :: forall a e. Encode a => Metric -> a -> Timer  -> Eff e Unit
 endTimer histogram labels timer = runFn3 endTimerImpl histogram (encode labels) timer
-
