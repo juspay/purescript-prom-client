@@ -34,4 +34,18 @@ exports.initHistogramImpl = function (name, desc, labels, bucket_start, bucket_e
   };
 };
 
+exports.startTimerImpl = function (histogram, labels) {
+  return function () {
+    return histogram.startTimer(labels);
+  };
+};
+
+
+exports.endTimerImpl = function (histogram, labels, execTimer) {
+  return function () {
+    execTimer(labels);
+    return {};
+  };
+};
+
 exports.promClusterMetrics = promBundle.clusterMetrics();
