@@ -12,6 +12,7 @@ foreign import promClusterMetrics :: forall e. Fn3 Request Response (ExpressM e 
 
 foreign import initCounter' :: forall e. Fn3 String String (Array String) (Eff e Metric)
 foreign import incrementCounter' :: forall a e. Fn2 Metric a (Eff e Metric)
+foreign import addLabels' :: forall e labels. Fn2 Metric labels (Eff e Metric)
 
 initCounter :: forall e. String -> String -> Array String -> Eff e Metric
 initCounter name desc labels = runFn3 initCounter' name desc labels
