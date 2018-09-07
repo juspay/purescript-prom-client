@@ -1,7 +1,7 @@
 var promBundle = require('express-prom-bundle');
 var promClient = promBundle.promClient;
 
-exports["initCounter'"] = function (name, desc, labels) {
+exports.initCounterImpl = function (name, desc, labels) {
   return function () {
     return new promClient.Counter({
       name: name,
@@ -11,15 +11,26 @@ exports["initCounter'"] = function (name, desc, labels) {
   };
 };
 
-exports["incrementCounter'"] = function (counter, labels) {
+exports.incrementCounterImpl = function (counter, labels) {
   return function () {
     return counter.inc(labels);
   };
 };
 
-exports["addLabels'"] = function (histogram, labels) {
+exports.addLabelsImpl = function (histogram, labels) {
   return function () {
     return histogram.set(labels);
+  };
+};
+
+exports.initHistogramImpl = function (name, desc, labels, bucket_start, bucket_end, factor) {
+  return function () {
+    return new promClient.Histogram({
+      name: name,
+      help: desc,
+      labelNames: labels,
+      buckets: promClient.exponentialBuckets(bucket_start, factor, bucket_end)
+    });
   };
 };
 
