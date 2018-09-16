@@ -1,0 +1,30 @@
+{
+  "name": "purescript-prom-client",
+  "version": "1.0.0",
+  "description": "purescript prometheus client wrapper",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juspay/purescript-prom-client.git"
+  },
+  "keywords": [
+    "prometheus",
+    "purescript",
+    "wrapper"
+  ],
+  "author": "newspecies",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/juspay/purescript-prom-client/issues"
+  },
+  "homepage": "https://github.com/juspay/purescript-prom-client#readme",
+  "dependencies": {
+    "express-prom-bundle": "^4.2.1"
+  }
+}

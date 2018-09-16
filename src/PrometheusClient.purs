@@ -18,6 +18,7 @@ foreign import addLabelsImpl :: forall e labels. Fn2 Metric labels (Eff e Metric
 foreign import startTimerImpl :: forall e labels. Fn2 Metric labels (Eff e Timer)
 foreign import endTimerImpl :: forall e labels. Fn3 Metric labels Timer (Eff e Unit)
 
+
 initCounter :: forall e. String -> String -> Array String -> Eff e Metric
 initCounter name desc labels = runFn3 initCounterImpl name desc labels
 
