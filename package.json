@@ -19,7 +19,7 @@
     "wrapper"
   ],
   "author": "newspecies",
-  "license": "BSD-3-Clause",
+  "license": "GNU GPLv3",
   "bugs": {
     "url": "https://github.com/juspay/purescript-prom-client/issues"
   },
