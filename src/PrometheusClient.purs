@@ -57,5 +57,5 @@ startTimer histogram labelRec  =
 endTimer :: forall a e. Encode a => Metric -> a -> Timer  -> Eff e Unit
 endTimer histogram labels timer = runFn3 endTimerImpl histogram (encode labels) timer
 
-observe :: forall a labels e. Metric -> labels -> a -> Eff e Unit
-observe histogram = runFn3 observeImpl histogram
+observe :: forall a b e. Encode b => Metric -> b -> a -> Eff e Unit
+observe histogram labels value = runFn3 observeImpl histogram (encode labels) value
