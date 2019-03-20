@@ -37,7 +37,7 @@ foreign import incrementCounterImpl :: forall a e. Fn2 Metric a (Eff e Metric)
 foreign import addLabelsImpl :: forall e labels. Fn2 Metric labels (Eff e Metric)
 foreign import startTimerImpl :: forall e labels. Fn2 Metric labels (Eff e Timer)
 foreign import endTimerImpl :: forall e labels. Fn3 Metric labels Timer (Eff e Unit)
-foreign import observeImpl :: forall a e labels. Fn2 Metric a (Eff e Unit)
+foreign import observeImpl :: forall a e labels. Fn3 Metric labels a (Eff e Unit)
 
 
 initCounter :: forall e. String -> String -> Array String -> Eff e Metric
@@ -57,5 +57,5 @@ startTimer histogram labelRec  =
 endTimer :: forall a e. Encode a => Metric -> a -> Timer  -> Eff e Unit
 endTimer histogram labels timer = runFn3 endTimerImpl histogram (encode labels) timer
 
-observe :: forall a e. Metric -> a -> Eff e Unit
-observe histogram = runFn2 observeImpl histogram
+observe :: forall a labels e. Metric -> labels -> a -> Eff e Unit
+observe histogram = runFn3 observeImpl histogram

@@ -73,9 +73,9 @@ exports.endTimerImpl = function (histogram, labels, execTimer) {
 
 exports.emptyTimer = function () { return {}; };
 
-exports.observeImpl = function (histogram, value) {
+exports.observeImpl = function (histogram, labels, value) {
   return function () {
-    histogram.observe(value);
+    histogram.observe(labels, value);
     return {}
   }
 }
