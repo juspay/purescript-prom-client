@@ -19,8 +19,10 @@
  along with this program. If not, see <https://www.gnu.org/licenses/agpl.html>.
 */
 
-var promBundle = require('express-prom-bundle');
-var promClient = promBundle.promClient;
+const promBundle = require('express-prom-bundle');
+const promClient = promBundle.promClient;
+const registry = promClient.register;
+
 
 exports.initCounterImpl = function (name, desc, labels) {
   return function () {
@@ -70,5 +72,12 @@ exports.endTimerImpl = function (histogram, labels, execTimer) {
 };
 
 exports.emptyTimer = function () { return {}; };
+
+exports.observeImpl = function (histogram, labels, value) {
+  return function () {
+    histogram.observe(labels, value);
+    return {}
+  }
+}
 
 exports.promClusterMetrics = promBundle.clusterMetrics();
