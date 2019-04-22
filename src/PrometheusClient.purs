@@ -34,6 +34,7 @@ foreign import promClusterMetrics :: forall e. Fn3 Request Response (ExpressM e 
 foreign import initCounterImpl :: forall e. Fn3 String String (Array String) (Eff e Metric)
 foreign import initHistogramImpl :: forall e. Fn6 String String (Array String) Number Number Number (Eff e Metric)
 foreign import incrementCounterImpl :: forall a e. Fn2 Metric a (Eff e Metric)
+foreign import incrementCounterByImpl :: forall a e. Fn3 Metric a Int (Eff e Metric)
 foreign import addLabelsImpl :: forall e labels. Fn2 Metric labels (Eff e Metric)
 foreign import startTimerImpl :: forall e labels. Fn2 Metric labels (Eff e Timer)
 foreign import endTimerImpl :: forall e labels. Fn3 Metric labels Timer (Eff e Unit)
@@ -45,6 +46,9 @@ initCounter name desc labels = runFn3 initCounterImpl name desc labels
 
 incrementCounter :: forall a e . Encode a => Metric -> a -> Eff e Metric
 incrementCounter counter labelRec = runFn2 incrementCounterImpl counter (encode labelRec)
+
+incrementCounterBy :: forall a e . Encode a => Metric -> a -> Int -> Eff e Metric
+incrementCounterBy counter labelRec val = runFn3 incrementCounterByImpl counter (encode labelRec) val
 
 initHistogram :: forall e. String -> Array String -> Number -> Number -> Number -> Eff e Metric
 initHistogram name labels bucketStart bucketEnd factor =

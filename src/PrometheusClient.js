@@ -40,6 +40,12 @@ exports.incrementCounterImpl = function (counter, labels) {
   };
 };
 
+exports.incrementCounterByImpl = function (counter, labels, val) {
+  return function () {
+    return counter.inc(labels, val);
+  };
+};
+
 exports.addLabelsImpl = function (histogram, labels) {
   return function () {
     return histogram.set(labels);
