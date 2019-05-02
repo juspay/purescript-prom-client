@@ -40,6 +40,35 @@ exports.incrementCounterImpl = function (counter, labels) {
   };
 };
 
+
+exports.initGaugeImpl = function (name, desc, labels) {
+  return function () {
+    return new promClient.Gauge({
+      name: name,
+      help: desc,
+      labelNames: labels
+    });
+  };
+};
+
+exports.incrementGaugeImpl = function (gauge, labels, value) {
+  return function () {
+    return gauge.inc(labels, value);
+  };
+};
+
+exports.setGaugeImpl = function (gauge, labels, value) {
+  return function () {
+    return gauge.set(labels, value);
+  };
+};
+
+exports.decrementGaugeImpl = function (gauge, labels, value) {
+  return function () {
+    return gauge.dec(labels, value);
+  };
+};
+
 exports.addLabelsImpl = function (histogram, labels) {
   return function () {
     return histogram.set(labels);
