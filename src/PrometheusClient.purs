@@ -38,13 +38,28 @@ foreign import addLabelsImpl :: forall e labels. Fn2 Metric labels (Eff e Metric
 foreign import startTimerImpl :: forall e labels. Fn2 Metric labels (Eff e Timer)
 foreign import endTimerImpl :: forall e labels. Fn3 Metric labels Timer (Eff e Unit)
 foreign import observeImpl :: forall a e labels. Fn3 Metric labels a (Eff e Unit)
-
+foreign import initGaugeImpl :: forall e. Fn3 String String (Array String) (Eff e Metric)
+foreign import setGaugeImpl :: forall a e. Fn3 Metric a Number (Eff e Metric)
+foreign import incrementGaugeImpl :: forall a e. Fn3 Metric a Number (Eff e Metric)
+foreign import decrementGaugeImpl :: forall a e. Fn3 Metric a Number (Eff e Metric)
 
 initCounter :: forall e. String -> String -> Array String -> Eff e Metric
 initCounter name desc labels = runFn3 initCounterImpl name desc labels
 
 incrementCounter :: forall a e . Encode a => Metric -> a -> Eff e Metric
 incrementCounter counter labelRec = runFn2 incrementCounterImpl counter (encode labelRec)
+
+initGauge :: forall e. String -> String -> Array String -> Eff e Metric
+initGauge name desc labels = runFn3 initGaugeImpl name desc labels
+
+setGauge :: forall a e . Encode a => Metric -> a -> Number -> Eff e Metric
+setGauge gauge labelRec value = runFn3 setGaugeImpl gauge (encode labelRec) value
+
+incrementGauge :: forall a e . Encode a => Metric -> a -> Number -> Eff e Metric
+incrementGauge gauge labelRec value = runFn3 incrementGaugeImpl gauge (encode labelRec) value
+
+decrementGauge :: forall a e . Encode a => Metric -> a -> Number -> Eff e Metric
+decrementGauge gauge labelRec value = runFn3 decrementGaugeImpl gauge (encode labelRec) value
 
 initHistogram :: forall e. String -> Array String -> Number -> Number -> Number -> Eff e Metric
 initHistogram name labels bucketStart bucketEnd factor =
