@@ -19,8 +19,9 @@
  along with this program. If not, see <https://www.gnu.org/licenses/agpl.html>.
 */
 
-var promBundle = require('express-prom-bundle');
-var promClient = promBundle.promClient;
+const promBundle = require('express-prom-bundle');
+const promClient = promBundle.promClient;
+const registry = promClient.register;
 
 exports.initCounterImpl = function (name, desc, labels) {
   return function () {
@@ -35,6 +36,34 @@ exports.initCounterImpl = function (name, desc, labels) {
 exports.incrementCounterImpl = function (counter, labels) {
   return function () {
     return counter.inc(labels);
+  };
+};
+
+exports.initGaugeImpl = function (name, desc, labels) {
+  return function () {
+    return new promClient.Gauge({
+      name: name,
+      help: desc,
+      labelNames: labels
+    });
+  };
+};
+
+exports.incrementGaugeImpl = function (gauge, labels, value) {
+  return function () {
+    return gauge.inc(labels, value);
+  };
+};
+
+exports.setGaugeImpl = function (gauge, labels, value) {
+  return function () {
+    return gauge.set(labels, value);
+  };
+};
+
+exports.decrementGaugeImpl = function (gauge, labels, value) {
+  return function () {
+    return gauge.dec(labels, value);
   };
 };
 
@@ -70,5 +99,12 @@ exports.endTimerImpl = function (histogram, labels, execTimer) {
 };
 
 exports.emptyTimer = function () { return {}; };
+
+exports.observeImpl = function (histogram, labels, value) {
+  return function () {
+    histogram.observe(labels, value);
+    return {}
+  }
+}
 
 exports.promClusterMetrics = promBundle.clusterMetrics();

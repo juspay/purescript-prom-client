@@ -22,9 +22,9 @@ module Prometheus.Client where
 
 import Prelude
 
+import Data.Function.Uncurried (Fn2, Fn3, Fn6, runFn2, runFn3, runFn6)
 import Effect (Effect)
 import Foreign.Class (class Encode, encode)
-import Data.Function.Uncurried (Fn2, Fn3, Fn6, runFn2, runFn3, runFn6)
 import Node.Express.Types (Response, Request)
 
 foreign import data Metric :: Type
@@ -37,7 +37,11 @@ foreign import incrementCounterImpl :: forall a. Fn2 Metric a (Effect Metric)
 foreign import addLabelsImpl :: forall labels. Fn2 Metric labels (Effect Metric)
 foreign import startTimerImpl :: forall labels. Fn2 Metric labels (Effect Timer)
 foreign import endTimerImpl :: forall labels. Fn3 Metric labels Timer (Effect Unit)
-
+foreign import observeImpl :: forall a labels. Fn3 Metric labels a (Effect Unit)
+foreign import initGaugeImpl :: Fn3 String String (Array String) (Effect Metric)
+foreign import setGaugeImpl :: forall a. Fn3 Metric a Number (Effect Metric)
+foreign import incrementGaugeImpl :: forall a. Fn3 Metric a Number (Effect Metric)
+foreign import decrementGaugeImpl :: forall a. Fn3 Metric a Number (Effect Metric)
 
 initCounter ::  String -> String -> Array String -> Effect  Metric
 initCounter name desc labels = runFn3 initCounterImpl name desc labels
@@ -45,7 +49,19 @@ initCounter name desc labels = runFn3 initCounterImpl name desc labels
 incrementCounter :: forall a . Encode a => Metric -> a -> Effect Metric
 incrementCounter counter labelRec = runFn2 incrementCounterImpl counter (encode labelRec)
 
-initHistogram ::  String -> Array String -> Number -> Number -> Number -> Effect  Metric
+initGauge :: String -> String -> Array String -> Effect Metric
+initGauge name desc labels = runFn3 initGaugeImpl name desc labels
+
+setGauge :: forall a. Encode a => Metric -> a -> Number -> Effect Metric
+setGauge gauge labelRec value = runFn3 setGaugeImpl gauge (encode labelRec) value
+
+incrementGauge :: forall a. Encode a => Metric -> a -> Number -> Effect Metric
+incrementGauge gauge labelRec value = runFn3 incrementGaugeImpl gauge (encode labelRec) value
+
+decrementGauge :: forall a. Encode a => Metric -> a -> Number -> Effect Metric
+decrementGauge gauge labelRec value = runFn3 decrementGaugeImpl gauge (encode labelRec) value
+
+initHistogram :: String -> Array String -> Number -> Number -> Number -> Effect Metric
 initHistogram name labels bucketStart bucketEnd factor =
   runFn6 initHistogramImpl name name labels bucketStart bucketEnd factor
 
@@ -55,3 +71,6 @@ startTimer histogram labelRec  =
 
 endTimer :: forall a. Encode a => Metric -> a -> Timer  -> Effect Unit
 endTimer histogram labels timer = runFn3 endTimerImpl histogram (encode labels) timer
+
+observe :: forall a b. Encode b => Metric -> b -> a -> Effect Unit
+observe histogram labels value = runFn3 observeImpl histogram (encode labels) value
