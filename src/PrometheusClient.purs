@@ -62,4 +62,4 @@ initGauge :: String -> String -> Array String -> Effect Metric
 initGauge name desc labels = runFn3 initGaugeImpl name desc labels
 
 setGauge :: forall a. Encode a => Metric -> a -> Number -> Effect Metric
-setGauge gauge labelRec value = runFn3 setGaugeImpl gauge (encode lab
+setGauge gauge labelRec value = runFn3 setGaugeImpl gauge (encode labelRec) value
