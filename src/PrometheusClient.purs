@@ -37,7 +37,8 @@ foreign import incrementCounterImpl :: forall a. Fn2 Metric a (Effect Metric)
 foreign import addLabelsImpl :: forall labels. Fn2 Metric labels (Effect Metric)
 foreign import startTimerImpl :: forall labels. Fn2 Metric labels (Effect Timer)
 foreign import endTimerImpl :: forall labels. Fn3 Metric labels Timer (Effect Unit)
-
+foreign import initGaugeImpl :: Fn3 String String (Array String) (Effect Metric)
+foreign import setGaugeImpl :: forall a. Fn3 Metric a Number (Effect Metric)
 
 initCounter ::  String -> String -> Array String -> Effect  Metric
 initCounter name desc labels = runFn3 initCounterImpl name desc labels
@@ -55,3 +56,10 @@ startTimer histogram labelRec  =
 
 endTimer :: forall a. Encode a => Metric -> a -> Timer  -> Effect Unit
 endTimer histogram labels timer = runFn3 endTimerImpl histogram (encode labels) timer
+
+
+initGauge :: String -> String -> Array String -> Effect Metric
+initGauge name desc labels = runFn3 initGaugeImpl name desc labels
+
+setGauge :: forall a. Encode a => Metric -> a -> Number -> Effect Metric
+setGauge gauge labelRec value = runFn3 setGaugeImpl gauge (encode lab

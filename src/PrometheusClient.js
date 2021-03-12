@@ -71,4 +71,21 @@ exports.endTimerImpl = function (histogram, labels, execTimer) {
 
 exports.emptyTimer = function () { return {}; };
 
+
+exports.initGaugeImpl = function (name, desc, labels) {
+  return function () {
+    return new promClient.Gauge({
+      name: name,
+      help: desc,
+      labelNames: labels
+    });
+  };
+};
+
+exports.setGaugeImpl = function (gauge, labels, value) {
+  return function () {
+    return gauge.set(labels, value);
+  };
+};
+
 exports.promClusterMetrics = promBundle.clusterMetrics();
